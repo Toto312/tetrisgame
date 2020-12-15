@@ -7,5 +7,5 @@ This project is about creating a simple Tetris game, using an old version of Ope
 I am still in the testing phase. From what you can see the code still needs to be improved.
 
 if you proove the project, you can see this:
-![PNG recompression comparison]()
+![PNG recompression comparison](https://github.com/Toto312/tetrisgame/blob/main/game%20photo.png)
 this is because i´m prooving the collision of the project
