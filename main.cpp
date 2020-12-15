@@ -1,40 +1,49 @@
+//Inlcudes
 #include <iostream>
-
 #include <GL/glut.h>
 
 
+//Definitions
 #define MOVE(x) 12 + 24 * (x)
 #define LOW_COORDENADE 12
 #define MAX_COORDENADE 492
 
 
-enum Color {RED, GREEN, BLUE};
+//Point options
+enum Color { RED, GREEN, BLUE };
 
+//Point struct
 struct Point {
 	int x, y;
 	Color color;
-};
+} player;
 
+//Other points. The first variable is the value of x, and the second is y. The third variable is x, and the fourth variable is y, etc.
 int others[] = { 0, 0, 0, 0, 0, 0 };
 
-float playerX = MOVE(10);
-float playerY = MOVE(20);
+//variables for other poinbts
+int otherY = MOVE(0); // cambiar el 3er numero para moverlo
+int otherX = MOVE(0);
 
+//world options
 float gravity = 0;
-
-
-Color playerColor = RED;
-
-int otherY = 12 + 24 * 0; // cambiar el 3er numero para moverlo
-int otherX = 12 + 24 * 0;
 
 void init()
 {
 	glClearColor(0.0, 0.0, 0.0, 0.0);
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+
+	//playerInit
+	player.x = MOVE(10);
+	player.y = MOVE(20);
+	player.color = RED;
+
+	//Others init
+	others[0] = MOVE(10);
+	others[1] = MOVE(0);
 }
 
-
+//OpenGL options
 void resize(int w, int h)
 {
 	glViewport(0, 0, (GLsizei)w, (GLsizei)h);
@@ -46,6 +55,7 @@ void resize(int w, int h)
 	glLoadIdentity();
 }
 
+//Render function
 void display()
 {
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -56,12 +66,12 @@ void display()
 
 	glPushMatrix();
 	glBegin(GL_POINTS);
-	if (playerColor == RED)
+	if (player.color == RED)
 	{
 		glColor3f(1.0, 0.0, 0.0);
 	}
-	glVertex2i(playerX, playerY);
-	
+	glVertex2i(player.x, player.y);
+
 	glColor3f(0.0, 1.0, 0.0);
 	glVertex2i(others[0], others[1]);
 
@@ -76,55 +86,52 @@ void display()
 	//-----------------------------------------------
 
 
-	if (playerY > LOW_COORDENADE)
+	if (player.y > LOW_COORDENADE)
 	{
-		gravity += 0.005;
+		gravity += 0.001;
 	}
 	else {
 		gravity = 0;
 	}
 
-	if (gravity >= 1 && playerY > LOW_COORDENADE)
+	if (gravity >= 1 && player.y > LOW_COORDENADE)
 	{
-		if (!(others[0] == playerX && others[1] == playerY - 24))
+		if (!(others[0] == player.x && others[1] == player.y - 24))
 		{
-			playerY -= 24;
+			player.y -= 24;
 			gravity = 0;
 		}
 	}
 
-	std::cout << "Value of gravity: " << gravity << std::endl; 
+	std::cout << "Value of gravity: " << gravity << std::endl;
 }
 
+//Keys for input the keyboard
 void specialKeys(int key, int x, int y)
 {
 	switch (key) {
-	/*case GLUT_KEY_UP:
-		if (playerY < 492) playerY += 24;
-		std::cout << "Apretaste up" << std::endl;
-		break;*/
-	case GLUT_KEY_DOWN:	
-		if (playerY != LOW_COORDENADE)
+	case GLUT_KEY_DOWN:
+		if (player.y != LOW_COORDENADE)
 		{
-			if (!(others[0] == playerX - 24 && others[1] == playerY - 24))
+			if (!(others[0] == player.x - 24 && others[1] == player.y - 24))
 			{
-				playerY -= 24;
+				player.y -= 24;
 			}
 		}
 		break;
 	case GLUT_KEY_RIGHT:
-		if (playerY != LOW_COORDENADE) {
-			if (!(others[0] == playerX - 24 && others[1] == playerY - 24))
+		if (player.y != LOW_COORDENADE) {
+			if (!(others[0] == player.x - 24 && others[1] == player.y - 24))
 			{
-				playerX += 24;
+				player.x += 24;
 			}
 		}
 		break;
 	case GLUT_KEY_LEFT:
-		if (playerY != LOW_COORDENADE) {
-			if (!(others[0] == playerX - 24 && others[1] == playerY - 24))
+		if (player.y != LOW_COORDENADE) {
+			if (!(others[0] == player.x - 24 && others[1] == player.y - 24))
 			{
-				 playerX -= 24;
+				player.x -= 24;
 			}
 		}
 		break;
@@ -140,16 +147,19 @@ void Timer(int value)
 void keyboard(unsigned char key, int x, int y)
 {
 	switch (key) {
+	//Is the value ascii of "r". This means that if the player input the letter "r", the point is going to reset its position
 	case 114:
-		playerY = MOVE(20);
-		playerX = MOVE(10);
+		player.y = MOVE(20);
+		player.x = MOVE(10);
 		break;
 	}
 }
 
+
+//The main function of the program
 int main(int argc, char* argv[])
 {
-    glutInit(&argc, argv);
+	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 
 	glutInitWindowSize(506, 506);
@@ -163,8 +173,6 @@ int main(int argc, char* argv[])
 	glutTimerFunc(0, Timer, 0);
 
 	init();
-	others[0] = MOVE(10);
-	others[1] = MOVE(0);
 
 	glutMainLoop();
 	return 0;
