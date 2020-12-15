@@ -155,7 +155,7 @@ int main(int argc, char* argv[])
 
 	glutInitWindowSize(506, 506);
 	glutInitWindowPosition(0, 0);
-	glutCreateWindow("Lesson1: Drawing simple shapes by Osama Hosam");
+	glutCreateWindow("OpenGL Tetris");
 
 	glutDisplayFunc(display);
 	glutReshapeFunc(resize);
